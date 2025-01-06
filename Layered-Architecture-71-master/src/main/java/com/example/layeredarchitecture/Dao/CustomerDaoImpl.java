@@ -9,13 +9,24 @@ import java.util.ArrayList;
 public class CustomerDaoImpl {
 
     //GET CUSTOMER DETAILS
-    public static CustomerDTO getCustDetails(String newValue) throws SQLException, ClassNotFoundException{
+    public static String getCustDetails(String newValue) throws SQLException, ClassNotFoundException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
         pstm.setString(1, newValue + "");
         ResultSet rst = pstm.executeQuery();
-        CustomerDTO customerDTO = new CustomerDTO(newValue + "", rst.getString("name"), rst.getString("address"));
-        return customerDTO;
+        if(rst.next()){
+            CustomerDTO customerDTO = new CustomerDTO(newValue + "", rst.getString("name"), rst.getString("address"));
+            return rst.getString("name");
+        }
+        return null;
+    }
+
+    //CHECK IS CUSTOMER EXISTS
+    public static boolean isExsistCustomer(String id) throws SQLException, ClassNotFoundException{
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
+        pstm.setString(1, id);
+        return pstm.executeQuery().next();
     }
 
     //GET ALL CUSTOMERS

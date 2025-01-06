@@ -2,6 +2,7 @@ package com.example.layeredarchitecture.controller;
 
 import com.example.layeredarchitecture.Dao.CustomerDaoImpl;
 import com.example.layeredarchitecture.Dao.ItemDAOImpl;
+import com.example.layeredarchitecture.Dao.OrderDAOImpl;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
@@ -103,9 +104,9 @@ public class PlaceOrderFormController {
                         }
 
                         //HERE CALL TO CUSTOMER DAO IMPL getCustDetails method
-                        CustomerDTO customerDTO = CustomerDaoImpl.getCustDetails(newValue);
+                        String name = CustomerDaoImpl.getCustDetails(newValue);
 
-                        txtCustomerName.setText(customerDTO.getName());
+                        txtCustomerName.setText(name);
                     } catch (SQLException e) {
                         new Alert(Alert.AlertType.ERROR, "Failed to find the customer " + newValue + "" + e).show();
                     }
@@ -188,21 +189,14 @@ public class PlaceOrderFormController {
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-//        Connection connection = DBConnection.getDbConnection().getConnection();
-//        PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
-//        pstm.setString(1, id);
-//        return pstm.executeQuery().next();
-
-//        CustomerDaoImpl.is
+        //HERE CALL TO DAO CUSTOMER
+        return CustomerDaoImpl.isExsistCustomer(id);
     }
 
     public String generateNewOrderId() {
         try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT oid FROM `Orders` ORDER BY oid DESC LIMIT 1;");
+            return OrderDAOImpl.getNewOrderId();
 
-            return rst.next() ? String.format("OID-%03d", (Integer.parseInt(rst.getString("oid").replace("OID-", "")) + 1)) : "OID-001";
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new order id").show();
         } catch (ClassNotFoundException e) {
