@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 public class OrderDAOImpl {
 
+    //HERE GET NEW ORDER ID
     public static String getNewOrderId() throws ClassNotFoundException, SQLException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         Statement stm = connection.createStatement();

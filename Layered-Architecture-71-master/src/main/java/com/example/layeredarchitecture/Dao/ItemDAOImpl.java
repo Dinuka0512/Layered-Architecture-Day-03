@@ -86,4 +86,35 @@ public class ItemDAOImpl {
             return "I00-001";
         }
     }
+
+    //GET ITEM DETAILS
+    public static ItemDTO itemDetails(String newItemCode) throws SQLException, ClassNotFoundException{
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+        pstm.setString(1, newItemCode + "");
+        ResultSet rst = pstm.executeQuery();
+        if(rst.next()){
+            return new ItemDTO(
+                    rst.getString("code"),
+                    rst.getString("description"),
+                    rst.getBigDecimal("unitPrice"),
+                    rst.getInt("qtyOnHand"));
+        }
+
+        return null;
+    }
+
+    //HERE GET ALL ITEM IDS
+    public static ArrayList<String> getAllItemID() throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT * FROM Item");
+
+        ArrayList<String> ids = new ArrayList<>();
+        while(rst.next()){
+            ids.add(rst.getString("code"));
+        }
+
+        return ids;
+    }
 }

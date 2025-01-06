@@ -29,6 +29,20 @@ public class CustomerDaoImpl {
         return pstm.executeQuery().next();
     }
 
+    //GET ALL CUSTOMER IDS
+    public static ArrayList<String> getAllCustomersIds() throws SQLException, ClassNotFoundException{
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
+
+        ArrayList<String> ids = new ArrayList<>();
+
+        while (rst.next()) {
+            ids.add(rst.getString("id"));
+        }
+        return ids;
+    }
+
     //GET ALL CUSTOMERS
     public ArrayList<CustomerDTO> getAllcustDetails() throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
@@ -49,7 +63,5 @@ public class CustomerDaoImpl {
 
         return customerDTOS;
     }
-
-
 
 }
