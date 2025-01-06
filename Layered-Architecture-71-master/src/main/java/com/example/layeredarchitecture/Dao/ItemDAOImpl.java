@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ItemDAOImpl {
+public class ItemDAOImpl implements ItemDAO{
     //SAVE
-    public static void saveItem(String code, String description, BigDecimal unitPrice, int qtyOnHand) throws ClassNotFoundException, SQLException {
+    public void saveItem(String code, String description, BigDecimal unitPrice, int qtyOnHand) throws ClassNotFoundException, SQLException {
         Connection connection = DBConnection.getDbConnection().getConnection();
                 PreparedStatement pstm = connection.prepareStatement("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)");
                 pstm.setString(1, code);
@@ -22,7 +22,7 @@ public class ItemDAOImpl {
     }
 
     //LOAD TABLE
-    public static ArrayList<ItemDTO> loadAllItems() throws SQLException, ClassNotFoundException{
+    public ArrayList<ItemDTO> loadAllItems() throws SQLException, ClassNotFoundException{
         /*Get all items*/
         Connection connection = DBConnection.getDbConnection().getConnection();
         Statement stm = connection.createStatement();
@@ -42,7 +42,7 @@ public class ItemDAOImpl {
     }
 
     //DELETE
-    public static void deleteItems(String code) throws ClassNotFoundException, SQLException{
+    public void deleteItems(String code) throws ClassNotFoundException, SQLException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
         pstm.setString(1, code);
@@ -50,7 +50,7 @@ public class ItemDAOImpl {
     }
 
     //UPDATE
-    public static void updateItem(String description, BigDecimal unitPrice, int qtyOnHand, String code, TableView<ItemTM> tblItems) throws ClassNotFoundException, SQLException{
+    public void updateItem(String description, BigDecimal unitPrice, int qtyOnHand, String code, TableView<ItemTM> tblItems) throws ClassNotFoundException, SQLException{
         /*Update Item*/
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
@@ -67,7 +67,7 @@ public class ItemDAOImpl {
     }
 
     //HERE CHECK IS EXIST
-    public static boolean isExistItem(String code) throws ClassNotFoundException, SQLException{
+    public boolean isExistItem(String code) throws ClassNotFoundException, SQLException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("SELECT code FROM Item WHERE code=?");
         pstm.setString(1, code);
@@ -75,7 +75,7 @@ public class ItemDAOImpl {
     }
 
     //GENERATE ITEM ID
-    public static String genarateItem() throws SQLException, ClassNotFoundException{
+    public String genarateItem() throws SQLException, ClassNotFoundException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         ResultSet rst = connection.createStatement().executeQuery("SELECT code FROM Item ORDER BY code DESC LIMIT 1;");
         if (rst.next()) {
@@ -88,7 +88,7 @@ public class ItemDAOImpl {
     }
 
     //GET ITEM DETAILS
-    public static ItemDTO itemDetails(String newItemCode) throws SQLException, ClassNotFoundException{
+    public ItemDTO itemDetails(String newItemCode) throws SQLException, ClassNotFoundException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
         pstm.setString(1, newItemCode + "");
@@ -105,7 +105,7 @@ public class ItemDAOImpl {
     }
 
     //HERE GET ALL ITEM IDS
-    public static ArrayList<String> getAllItemID() throws SQLException, ClassNotFoundException {
+    public ArrayList<String> getAllItemID() throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT * FROM Item");

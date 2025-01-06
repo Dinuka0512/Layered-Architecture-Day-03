@@ -1,5 +1,6 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.Dao.ItemDAO;
 import com.example.layeredarchitecture.Dao.ItemDAOImpl;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.ItemDTO;
@@ -39,6 +40,7 @@ public class ManageItemsFormController {
     public TextField txtUnitPrice;
     public JFXButton btnAddNewItem;
 
+    private ItemDAO itemDAO = new ItemDAOImpl();
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblItems.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -72,7 +74,7 @@ public class ManageItemsFormController {
     private void loadAllItems() {
         tblItems.getItems().clear();
         try {
-            ArrayList<ItemDTO> itemDTOS = ItemDAOImpl.loadAllItems();
+            ArrayList<ItemDTO> itemDTOS = itemDAO.loadAllItems();
             ObservableList observableList = FXCollections.observableArrayList();
             for(ItemDTO itemDTO : itemDTOS){
                 ItemTM itemTM = new ItemTM(itemDTO.getCode(), itemDTO.getDescription(), itemDTO.getUnitPrice(), itemDTO.getQtyOnHand());
@@ -136,7 +138,7 @@ public class ManageItemsFormController {
             }
 
             //HERE CALL TO THE DTO IMPL DELETE ITEMS METHOD
-            ItemDAOImpl.deleteItems(code);
+            itemDAO.deleteItems(code);
 
             tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
             tblItems.getSelectionModel().clearSelection();
@@ -177,7 +179,7 @@ public class ManageItemsFormController {
                     new Alert(Alert.AlertType.ERROR, code + " already exists").show();
                 }
                 //HERE CALL TO DTO IMPL SAVE METHOD
-                ItemDAOImpl.saveItem(code, description, unitPrice, qtyOnHand);
+                itemDAO.saveItem(code, description, unitPrice, qtyOnHand);
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
             } catch (SQLException e) {
@@ -193,7 +195,7 @@ public class ManageItemsFormController {
                 }
 
                 //HERE CALL TO THE DTOIMPL UPDATE METHOD
-                ItemDAOImpl.updateItem(description, unitPrice, qtyOnHand, code, tblItems);
+                itemDAO.updateItem(description, unitPrice, qtyOnHand, code, tblItems);
 
                 tblItems.refresh();
             } catch (SQLException e) {
@@ -208,13 +210,13 @@ public class ManageItemsFormController {
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
         //HERE CALL TO DAO IMPL & Return the boolean value is exists or not
-        return ItemDAOImpl.isExistItem(code);
+        return itemDAO.isExistItem(code);
     }
 
     private String generateNewId() {
         try {
             //HERE CALL DAO IMPL AND GENERATE ITEM METHOD
-            String newId = ItemDAOImpl.genarateItem();
+            String newId = itemDAO.genarateItem();
             return newId;
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();

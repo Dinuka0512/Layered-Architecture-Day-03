@@ -6,10 +6,11 @@ import com.example.layeredarchitecture.model.CustomerDTO;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CustomerDaoImpl {
+public class CustomerDaoImpl implements CustomerDAO{
 
     //GET CUSTOMER DETAILS
-    public static String getCustDetails(String newValue) throws SQLException, ClassNotFoundException{
+    @Override
+    public String getCustDetails(String newValue) throws SQLException, ClassNotFoundException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
         pstm.setString(1, newValue + "");
@@ -22,7 +23,8 @@ public class CustomerDaoImpl {
     }
 
     //CHECK IS CUSTOMER EXISTS
-    public static boolean isExsistCustomer(String id) throws SQLException, ClassNotFoundException{
+    @Override
+    public boolean isExsistCustomer(String id) throws SQLException, ClassNotFoundException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
         pstm.setString(1, id);
@@ -30,7 +32,8 @@ public class CustomerDaoImpl {
     }
 
     //GET ALL CUSTOMER IDS
-    public static ArrayList<String> getAllCustomersIds() throws SQLException, ClassNotFoundException{
+    @Override
+    public ArrayList<String> getAllCustomersIds() throws SQLException, ClassNotFoundException{
         Connection connection = DBConnection.getDbConnection().getConnection();
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
@@ -44,6 +47,7 @@ public class CustomerDaoImpl {
     }
 
     //GET ALL CUSTOMERS
+    @Override
     public ArrayList<CustomerDTO> getAllcustDetails() throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         String sql = "SELECT * FROM Customer";
